@@ -19,3 +19,26 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
+
+const buttonStart = document.querySelector('button[data-start]');
+const timePicker = document.getElementById('datetime-picker');
+const days = document.querySelector('span[data-days]');
+const hours = document.querySelector('span[data-hours]');
+const minutes = document.querySelector('span[data-minutes]');
+const seconds = document.querySelector('span[data-seconds]');
+
+buttonStart.addEventListener('click', startTimer);
+
+function startTimer() {}
+
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    console.log(selectedDates[0]);
+  },
+};
+
+flatpickr(element, options);
