@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const buttonStart = document.querySelector('button[data-start]');
 const timePicker = document.getElementById('datetime-picker');
@@ -15,6 +16,7 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     console.log(selectedDates[0]);
+    currentDeltaTime(selectedDates[0]);
   },
 };
 
@@ -48,8 +50,32 @@ function pad(value) {
   return String(value).padStart('2', '0');
 }
 
+function currentDeltaTime(selectedDates) {
+  const currentDate = Date.now();
+  if (selectedDates < currentDate) {
+    buttonStart.setAttribute('disabled', true);
+    return Notify.failure('Please choose a date in the future');
+  }
+  deltaTime = selectedDates.getTime() - currentDate;
+  formatDate = convertMs(deltaTime);
+  updateTimerface(formatDate);
+  buttonStart.removeAttribute('disabled');
+}
+
 function startTimer() {
-  timerId = setInterval(() => {}, 1000);
+  timerId = setInterval(() => {
+    buttonStart.setAttribute('disabled', true);
+    timePicker.setAttribute('disabled', true);
+
+    deltaTime -= 1000;
+
+    if (seconds.textContent <= 0 && minutes.textContent <= 0) {
+      clearInterval(timerId);
+    } else {
+      formatDate = convertMs(deltaTime);
+      updateTimerface(formatDate);
+    }
+  }, 1000);
 }
 
 function updateTimerface(formatDate) {
